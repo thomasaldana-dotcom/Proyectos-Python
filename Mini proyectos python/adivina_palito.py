@@ -1,34 +1,54 @@
 from random import *
 
-palitos = ["-","--","---","----"]
+palitos = ["-", "--", "---", "----"]
 
 def mezclar(lista):
     shuffle(lista)
     return lista
 
 def intento(lista):
-    print("Adivina el palito mas largo.... ¡'----'! Escoja un numero del 1 al 4:")
+    print("Bienvenido. Su objetivo es encontrar el palito más largo ('----').")
+    print("Por favor, seleccione una posición entre el 1 y el 4:")
 
     intentos = 5
-    palitoLargo = lista.index("----") + 1  # usar la lista mezclada
-    num = int(input("Numero: "))
-
+    # Buscamos la posición correcta para mostrarla si pierde
+    palitoLargo = lista.index("----") + 1 
+    
+    try:
+        num = int(input("Ingrese un número: "))
+    except ValueError:
+        num = 0 # Si escriben letras, lo convertimos en 0 para que caiga en error
+    
     while True:
-        if num not in [1,2,3,4]:
+        # Validación de rango
+        if num not in [1, 2, 3, 4]:
             intentos -= 1
-            print("Es que acaso no sabe leer, huevon? dice 1 a 4... le voy a quitar un intento, intentos:", intentos)
-            num = int(input("Numero: "))
+            print(f"Entrada inválida. El número debe estar entre 1 y 4. Se ha restado un intento. Intentos restantes: {intentos}")
+            
+            if intentos > 0:
+                try:
+                    num = int(input("Intente nuevamente: "))
+                except ValueError:
+                    num = 0
         else:
-            seleccionado = lista[num-1]   # usar la lista mezclada
+            # Lógica del juego
+            seleccionado = lista[num-1]
+            
             if seleccionado != "----":
                 intentos -= 1
-                print(f"Paila marica '{seleccionado}' no era, le quedan {intentos} intentos")
-                num = int(input("Numero: "))
+                print(f"Incorrecto. Ha seleccionado el palito '{seleccionado}'. Le quedan {intentos} intentos.")
+                
+                if intentos > 0:
+                    try:
+                        num = int(input("Seleccione otra posición: "))
+                    except ValueError:
+                        num = 0
             else:
-                return f"Muy bien marica lo encontró '{seleccionado}' ese era... 😏"
+                return f"¡Felicidades! Ha encontrado el palito más largo '{seleccionado}'. Has ganado."
 
+        # Condición de derrota
         if intentos == 0:
-            return f"Paila, se quedó sin intentos. El palo largo estaba en el número: {palitoLargo}"
+            return f"Juego terminado. Se han agotado sus intentos. El palito largo estaba en la posición: {palitoLargo}"
 
 mezclados = mezclar(palitos)
 print(intento(mezclados))
